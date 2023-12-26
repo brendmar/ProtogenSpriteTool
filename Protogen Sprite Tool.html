@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Protogen Sprite Tool</title>
+    <style>
+    .container {
+      display: flex;
+    }
+    #checkboxGrid {
+      margin-right: 20px; /* Adding some space between grid and output */
+    }
+  </style>
+  <script>
+    function createCheckboxes() {
+      const checkboxGrid = document.getElementById('checkboxGrid');
+      const numRowsSelect = document.getElementById('numRowsSelect');
+      const checkboxesPerRow = 8;
+      const numRows = parseInt(numRowsSelect.value);
+
+      checkboxGrid.innerHTML = ''; // Clear existing checkboxes
+
+      for (let i = 0; i < numRows; i++) {
+        const row = document.createElement('div');
+        for (let j = 0; j < checkboxesPerRow; j++) {
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.id = `checkbox_${i}_${j}`;
+          row.appendChild(checkbox);
+        }
+        checkboxGrid.appendChild(row);
+      }
+    }
+
+    function convertToBinary() {
+      const binaryOutput = [];
+      const numRows = parseInt(document.getElementById('numRowsSelect').value);
+
+      for (let i = 0; i < numRows; i++) {
+        let rowBinary = '0b';
+        for (let j = 0; j < 8; j++) {
+          const checkbox = document.getElementById(`checkbox_${i}_${j}`);
+          rowBinary += checkbox.checked ? '1' : '0';
+        }
+        binaryOutput.push(rowBinary + ',');
+      }
+      document.getElementById('binaryOutput').innerText = binaryOutput.join('\n');
+    }
+
+    function convertToCheckboxes() {
+      const binaryInput = document.getElementById('binaryInput').value.split('\n');
+      const numRows = parseInt(document.getElementById('numRowsSelect').value);
+
+      binaryInput.forEach((binaryRow, index) => {
+        if (index < numRows) {
+          binaryRow = binaryRow.trim();
+          if (binaryRow.startsWith('0b')) {
+            binaryRow = binaryRow.substring(2, 10); // Consider only the binary part
+            for (let i = 0; i < 8; i++) {
+              const checkbox = document.getElementById(`checkbox_${index}_${i}`);
+              checkbox.checked = binaryRow[i] === '1';
+            }
+          }
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <label for="numRowsSelect">Select number of rows (8-128, increments of 8):</label>
+  <select id="numRowsSelect" onchange="createCheckboxes()">
+    <option value="8">8</option>
+    <option value="16">16</option>
+    <option value="24">24</option>
+	<option value="32">32</option>
+	<option value="40">40</option>
+	<option value="48">48</option>
+	<option value="56">56</option>
+	<option value="64">64</option>
+	<option value="72">72</option>
+	<option value="80">80</option>
+	<option value="88">88</option>
+	<option value="96">96</option>
+	<option value="104">104</option>
+	<option value="112">112</option>
+    <option value="128">128</option>
+  </select>
+  
+  <div class="container" style="margin-right:20px";>
+  <div id="checkboxGrid" style="margin-right:20px";></div>
+  <button onclick="convertToBinary()"  style="margin-right:20px";  style="margin-left:20px";>Convert to Binary</button>
+  <pre id="binaryOutput" style="margin-right:20px";></pre>
+  <textarea id="binaryInput" placeholder="Paste binary output here" style="margin-right:20px";></textarea>
+  <button onclick="convertToCheckboxes()" style="margin-right:20px";>Convert to Checkboxes</button>
+   </div>
+  </div style="margin-right:20px";>
+  <script>
+    createCheckboxes(); // Create checkboxes on page load
+  </script>
+</body>
+</html>
